@@ -91,6 +91,8 @@ def delete_messages():
                     json.dump(messages, outfile,
                                     indent=4,
                                     separators=(',',': '))
+            else:
+                return "ID not in list"
 
     return jsonify({'result': "Deleted message with id: " + args})
 
