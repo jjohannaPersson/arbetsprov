@@ -4,26 +4,27 @@ import json
 
 app = Flask(__name__)
 
-with open('data/messages.json') as f:
-        messages = json.load(f)
-
-# with open('data/newmessages.json') as f:
-#         newmessages = json.load(f)
-
 @app.route('/messages/all', methods=['GET'])
 def get_all_messages():
     with open('data/messages.json') as f:
             messages = json.load(f)
-    id = request.args.get('id')
-    messrange = id.split('-')
     msg = []
-    for i in range(int(messrange[0]), int(messrange[1]) + 1):
-        for message in messages:
-            if message["read"] is None:
-                pass
-            elif message["id"] == i:
-                msg.append(message)
 
+    if request.args:
+        id = request.args.get('id')
+        messageRange = id.split('-')
+        for i in range(int(messageRange[0]), int(messageRange[1]) + 1):
+            for message in messages:
+                if message["read"] is None:
+                    pass
+                elif message["id"] == i:
+                    msg.append(message)
+
+        return jsonify({'messages': msg})
+
+    for message in messages:
+        if message["read"] is not None:
+            msg.append(message)
     return jsonify({'messages': msg})
 
 @app.route('/messages/new', methods=['GET'])
@@ -76,18 +77,6 @@ def new_message():
 
     return jsonify({'message': message}), 201
 
-# @app.route('/delete/<int:id>', methods=['DELETE'])
-# def delete_message(id):
-#     message = [message for message in allmessages if message["id"] == id]
-#     if len(message) == 0:
-#         abort(400)
-#     allmessages.remove(message[0])
-#     with open('data/allmessages.json', 'w') as outfile:
-#         json.dump(allmessages, outfile,
-#                         indent=4,
-#                         separators=(',',': '))
-#     return jsonify({'result': "Deleted message with id: " + str(message[0]["id"])})
-
 @app.route('/delete', methods=['DELETE'])
 def delete_messages():
     args = request.args.get('id')
@@ -104,4 +93,4 @@ def delete_messages():
     return jsonify({'result': "Deleted message with id: " + args})
 
 if __name__ == '__main__':
-    app.run(debug=True)  # run our Flask app
+    app.run(debug=True)
