@@ -9,7 +9,8 @@ Route | Type | Description
 --- | --- | ---
 /send | `POST` | Submit a message to a defined recipient
 /messages/new | `GET` | Fetch new messages
-/messages/all | `GET` | Fetch all messages
+/messages/all?id=<id-id> | `GET` | Fetch all messages in range according
+to start and stop index
 /delete?id=<id,id> | `DELETE` | Delete a single or multiple messages
 
 ## How to use the service

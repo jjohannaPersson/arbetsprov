@@ -1,60 +1,76 @@
 from flask import Flask, jsonify, request, abort
+from datetime import datetime
 import json
 
 app = Flask(__name__)
 
-with open('data/allmessages.json') as f:
-        allmessages = json.load(f)
+with open('data/messages.json') as f:
+        messages = json.load(f)
 
-with open('data/newmessages.json') as f:
-        newmessages = json.load(f)
+# with open('data/newmessages.json') as f:
+#         newmessages = json.load(f)
 
 @app.route('/messages/all', methods=['GET'])
 def get_all_messages():
-    return jsonify({'messages': allmessages})
+    with open('data/messages.json') as f:
+            messages = json.load(f)
+    id = request.args.get('id')
+    messrange = id.split('-')
+    msg = []
+    for i in range(int(messrange[0]), int(messrange[1]) + 1):
+        for message in messages:
+            if message["read"] is None:
+                pass
+            elif message["id"] == i:
+                msg.append(message)
+
+    return jsonify({'messages': msg})
 
 @app.route('/messages/new', methods=['GET'])
 def get_new_messages():
     try:
-        with open('data/newmessages.json') as f:
-                newmessages = json.load(f)
-        return jsonify({'messages': newmessages})
+        with open('data/messages.json') as f:
+                messages = json.load(f)
+
+        newMsg = []
+
+        for message in messages:
+            if message["read"] is None:
+                newMsg.append(message)
+
+        return jsonify({'messages': newMsg})
     finally:
-        for message in newmessages:
-            allmessages.append(message)
-            with open('data/allmessages.json', 'w') as outfile:
-                json.dump(allmessages, outfile,
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        for message in newMsg:
+            message["read"] = dt_string
+            with open('data/messages.json', 'w') as outfile:
+                json.dump(messages, outfile,
                                 indent=4,
                                 separators=(',',': '))
-            with open('data/newmessages.json', 'w') as outfile:
-                json.dump([], outfile)
 
 @app.route('/send', methods=['POST'])
 def new_message():
-    with open('data/allmessages.json') as f:
-            allmessages = json.load(f)
-
-    with open('data/newmessages.json') as f:
-            newmessages = json.load(f)
+    with open('data/messages.json') as f:
+            messages = json.load(f)
 
     if not request.json or not 'name' in request.json:
         abort(400)
 
-    if len(newmessages) > 0:
-        id = newmessages[-1]["id"] + 1
-    elif len(allmessages) > 0:
-        id = allmessages[-1]["id"] + 1
+    if len(messages) > 0:
+        id = messages[-1]["id"] + 1
     else:
         id = 1
 
     message = {
         'id': id,
+        'read': None,
         'name': request.json["name"],
         'message': request.json["message"]
     }
-    newmessages.append(message)
-    with open('data/newmessages.json', 'w') as outfile:
-        json.dump(newmessages, outfile,
+    messages.append(message)
+    with open('data/messages.json', 'w') as outfile:
+        json.dump(messages, outfile,
                         indent=4,
                         separators=(',',': '))
 
@@ -77,11 +93,11 @@ def delete_messages():
     args = request.args.get('id')
     ids = args.split(',')
     for id in ids:
-        for message in allmessages:
+        for message in messages:
             if message["id"] == int(id):
-                allmessages.remove(message)
-                with open('data/allmessages.json', 'w') as outfile:
-                    json.dump(allmessages, outfile,
+                messages.remove(message)
+                with open('data/messages.json', 'w') as outfile:
+                    json.dump(messages, outfile,
                                     indent=4,
                                     separators=(',',': '))
 
