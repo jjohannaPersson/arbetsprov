@@ -13,20 +13,20 @@ Route | Type | Description
 /delete?id=<id,id> | `DELETE` | Delete a single or multiple messages
 
 ## How to use the service
-Execute `main.py`:
+Execute `main.py`:  
 `python3 main.py`
 
-Submit a message to a defined recipient:
+Submit a message to a defined recipient:  
 `$ curl -i -H "Content-Type: application/json" -X POST -d '{"name":"Johanna", "message": "Hej Johanna!"}' http://localhost:5000/send `
 
-Fetch new messages:
+Fetch new messages:  
 `$ curl -i http://localhost:5000/messages/new `
 
-Fetch all messages:
+Fetch all messages:  
 `$ curl -i http://localhost:5000/messages/all `
 
-Delete a single message with id 1:
+Delete a single message with id 1:  
 `$ curl -X DELETE http://localhost:5000/delete?id=1 `
 
-Delete multiple messages with id 1 and 2:
+Delete multiple messages with id 1 and 2:  
 `$ curl -X DELETE http://localhost:5000/delete?id=1,2 `
