@@ -79,6 +79,8 @@ def new_message():
 
 @app.route('/delete', methods=['DELETE'])
 def delete_messages():
+    with open('data/messages.json') as f:
+            messages = json.load(f)
     args = request.args.get('id')
     ids = args.split(',')
     for id in ids:

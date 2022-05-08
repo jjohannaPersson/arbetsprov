@@ -1,17 +1,5 @@
 [
     {
-        "id": 1,
-        "read": "08/05/2022 22:44:42",
-        "name": "Johanna",
-        "message": "Hej Johanna!"
-    },
-    {
-        "id": 2,
-        "read": "08/05/2022 22:44:42",
-        "name": "Johanna",
-        "message": "Hej Johanna!"
-    },
-    {
         "id": 3,
         "read": "08/05/2022 22:50:01",
         "name": "Johanna",
