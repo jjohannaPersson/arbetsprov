@@ -8,6 +8,9 @@ app = Flask(__name__)
 def get_all_messages():
     with open('data/messages.json') as f:
             messages = json.load(f)
+    now = datetime.now()
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
     if request.args:
         id = request.args.get('id')
         messageRange = id.split('-')
@@ -15,9 +18,22 @@ def get_all_messages():
         for i in range(int(messageRange[0]), int(messageRange[1]) + 1):
             for message in messages:
                 if message["id"] == i:
+                    if message["read"] is None:
+                        message["read"] = dt_string
+                        with open('data/messages.json', 'w') as outfile:
+                            json.dump(messages, outfile,
+                                            indent=4,
+                                            separators=(',',': '))
                     msg.append(message)
-
         return jsonify({'messages': msg})
+
+    for message in messages:
+        if message["read"] is None:
+            message["read"] = dt_string
+            with open('data/messages.json', 'w') as outfile:
+                json.dump(messages, outfile,
+                                indent=4,
+                                separators=(',',': '))
 
     return jsonify({'messages': messages})
 
@@ -85,8 +101,6 @@ def delete_messages():
                     json.dump(messages, outfile,
                                     indent=4,
                                     separators=(',',': '))
-            else:
-                return "ID not in list"
 
     return jsonify({'result': "Deleted message with id: " + args})
 
