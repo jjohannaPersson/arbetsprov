@@ -8,24 +8,18 @@ app = Flask(__name__)
 def get_all_messages():
     with open('data/messages.json') as f:
             messages = json.load(f)
-    msg = []
-
     if request.args:
         id = request.args.get('id')
         messageRange = id.split('-')
+        msg = []
         for i in range(int(messageRange[0]), int(messageRange[1]) + 1):
             for message in messages:
-                if message["read"] is None:
-                    pass
-                elif message["id"] == i:
+                if message["id"] == i:
                     msg.append(message)
 
         return jsonify({'messages': msg})
 
-    for message in messages:
-        if message["read"] is not None:
-            msg.append(message)
-    return jsonify({'messages': msg})
+    return jsonify({'messages': messages})
 
 @app.route('/messages/new', methods=['GET'])
 def get_new_messages():
