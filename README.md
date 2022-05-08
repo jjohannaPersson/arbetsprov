@@ -22,8 +22,8 @@ Submit a message to a defined recipient:
 Fetch new messages:  
 `$ curl -i http://localhost:5000/messages/new `
 
-Fetch all messages:  
-`$ curl -i http://localhost:5000/messages/all `
+Fetch all messages with index 1-3:  
+`$ curl -i http://localhost:5000/messages/all?id=1-3 `
 
 Delete a single message with id 1:  
 `$ curl -X DELETE http://localhost:5000/delete?id=1 `
