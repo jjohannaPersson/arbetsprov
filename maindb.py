@@ -49,11 +49,14 @@ def get_new_messages():
         # read question : SQLite index start from 1 (see index.html)
         query = "UPDATE messages SET read = '" + dt_string + "' WHERE read IS NULL;"
         c.execute(query)
+        querySelect = "Select * FROM messages WHERE read = '" + dt_string + "';"
+        c.execute(querySelect)
         for row in c:
             print(row)
             msg.append(row)
+            con.commit()
         con.commit() # apply changes
-        return str(c)
+        return str(msg)
     except con.Error as err: # if error
         return "An error occured: " + str(err)
     finally:
