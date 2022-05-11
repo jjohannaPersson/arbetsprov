@@ -9,7 +9,8 @@ Route | Type | Description
 --- | --- | ---
 /send | `POST` | Submit a message to a defined recipient
 /messages/new | `GET` | Fetch new messages
-/messages/all?id=<id\-id> | `GET` | Fetch all messages in range according to start and stop index
+/messages/all | `GET` | Fetch all messages ordered by time
+/messages/all?id=<id\-id> | `GET` | Fetch all messages ordered by time, according to start and stop index
 /delete?id=<id,id> | `DELETE` | Delete a single or multiple messages
 
 ## How to use the service
@@ -21,6 +22,9 @@ Submit a message to a defined recipient:
 
 Fetch new messages:  
 `$ curl -i http://localhost:5000/messages/new `
+
+Fetch all messages:  
+`$ curl -i http://localhost:5000/messages/all `
 
 Fetch all messages with index 1-3:  
 `$ curl -i http://localhost:5000/messages/all?id=1-3 `
